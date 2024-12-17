@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Suspense Theme</title>
     <style>
-        /* General scary/suspenseful theme */
+        /* General suspenseful theme */
         body {
             background-color: black;
             color: red;
             font-family: 'Courier New', monospace;
             font-size: 2rem;
             text-align: center;
-            margin-top: 10%;
+            margin-top: 5%;
             letter-spacing: 3px;
         }
 
@@ -23,67 +23,64 @@
             margin-bottom: 20px;
         }
 
-        #output {
-            margin-top: 20px;
+        /* Stacked lines container */
+        #output p {
+            margin: 10px 0;
+            opacity: 0;
             transition: opacity 1s ease-in-out;
         }
 
         /* Flickering effect for suspense */
         @keyframes flicker {
             0% { opacity: 1; }
-            50% { opacity: 0.7; }
+            50% { opacity: 0.6; }
             100% { opacity: 0.9; }
         }
 
-        /* Instructions styling */
+        /* Instructions to press Enter */
         #prompt {
-            color: white;
+            color: yellow;
             font-size: 1.5rem;
-            margin-top: 20px;
+            margin-top: 30px;
             animation: flicker 2s infinite alternate;
         }
     </style>
 </head>
 <body>
     <h1>Press "Enter" to reveal...</h1>
-    <div id="output"></div> <!-- Container for stacked words -->
-    <p id="prompt">Press "Enter"...</p>
+    <div id="output"></div> <!-- Container for stacked text lines -->
+    <p id="prompt">Press "Enter" to continue...</p>
 
     <script>
-        // Array holding the suspenseful text lines
+        // Array of suspenseful lines to display
         const lines = ["Afton Alps", "January 4th", "9 AM"];
         let currentIndex = 0;
 
-        // Event listener for key press
+        // Event listener for Enter key
         document.addEventListener('keydown', function(event) {
             if (event.key === "Enter") {
-                // If there are lines left to display
                 if (currentIndex < lines.length) {
-                    let outputElement = document.getElementById('output');
-                    
-                    // Add the current line as a new paragraph (stacking effect)
+                    // Create a new paragraph for the next line of text
                     let newLine = document.createElement('p');
                     newLine.innerText = lines[currentIndex];
-                    newLine.style.opacity = "0"; // Initial opacity for fade-in effect
-                    
-                    // Append the new line to the output container
-                    outputElement.appendChild(newLine);
 
-                    // Fade-in effect with slight delay
+                    // Append it to the output container
+                    document.getElementById('output').appendChild(newLine);
+
+                    // Fade-in effect
                     setTimeout(() => {
                         newLine.style.opacity = "1";
-                    }, 300);
+                    }, 100);
 
-                    // Increment to the next line
-                    currentIndex++;
+                    currentIndex++; // Move to the next line
                 }
 
-                // Update or repeat the prompt to press Enter
+                // Update the prompt
                 let promptElement = document.getElementById('prompt');
                 if (currentIndex < lines.length) {
                     promptElement.innerText = "Press 'Enter' to continue...";
                 } else {
-                    promptElement.innerText = "That's it... 🎃";
+                    promptElement.innerText = "That's it... Press 'Enter' to restart.";
                 }
             }
         });
