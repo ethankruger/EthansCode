@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Suspense Theme</title>
     <style>
-        /* General styling for a scary/suspenseful theme */
+        /* General scary/suspenseful theme */
         body {
             background-color: black;
             color: red;
             font-family: 'Courier New', monospace;
             font-size: 2rem;
             text-align: center;
-            margin-top: 20%;
+            margin-top: 10%;
             letter-spacing: 3px;
         }
 
@@ -20,11 +20,11 @@
             color: white;
             font-size: 2.5rem;
             animation: flicker 1.5s infinite alternate;
+            margin-bottom: 20px;
         }
 
         #output {
             margin-top: 20px;
-            opacity: 0;
             transition: opacity 1s ease-in-out;
         }
 
@@ -34,11 +34,20 @@
             50% { opacity: 0.7; }
             100% { opacity: 0.9; }
         }
+
+        /* Instructions styling */
+        #prompt {
+            color: white;
+            font-size: 1.5rem;
+            margin-top: 20px;
+            animation: flicker 2s infinite alternate;
+        }
     </style>
 </head>
 <body>
     <h1>Press "Enter" to reveal...</h1>
-    <p id="output"></p>
+    <div id="output"></div> <!-- Container for stacked words -->
+    <p id="prompt">Press "Enter"...</p>
 
     <script>
         // Array holding the suspenseful text lines
@@ -48,18 +57,33 @@
         // Event listener for key press
         document.addEventListener('keydown', function(event) {
             if (event.key === "Enter") {
-                // If all lines are shown, stop
+                // If there are lines left to display
                 if (currentIndex < lines.length) {
-                    // Reveal the current line of text
                     let outputElement = document.getElementById('output');
-                    outputElement.style.opacity = "0"; // Fade out effect
+                    
+                    // Add the current line as a new paragraph (stacking effect)
+                    let newLine = document.createElement('p');
+                    newLine.innerText = lines[currentIndex];
+                    newLine.style.opacity = "0"; // Initial opacity for fade-in effect
+                    
+                    // Append the new line to the output container
+                    outputElement.appendChild(newLine);
 
-                    // Delay text update for suspense
+                    // Fade-in effect with slight delay
                     setTimeout(() => {
-                        outputElement.innerText = lines[currentIndex];
-                        outputElement.style.opacity = "1"; // Fade in effect
-                        currentIndex++;
-                    }, 500); // 500ms delay for suspense
+                        newLine.style.opacity = "1";
+                    }, 300);
+
+                    // Increment to the next line
+                    currentIndex++;
+                }
+
+                // Update or repeat the prompt to press Enter
+                let promptElement = document.getElementById('prompt');
+                if (currentIndex < lines.length) {
+                    promptElement.innerText = "Press 'Enter' to continue...";
+                } else {
+                    promptElement.innerText = "That's it... 🎃";
                 }
             }
         });
