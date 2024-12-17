@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Suspense Theme</title>
+    <title>Suspense Theme with Button</title>
     <style>
         /* General suspenseful theme */
         body {
@@ -23,64 +23,79 @@
             margin-bottom: 20px;
         }
 
-        /* Stacked lines container */
+        /* Stacked text */
         #output p {
             margin: 10px 0;
             opacity: 0;
             transition: opacity 1s ease-in-out;
         }
 
-        /* Flickering effect for suspense */
+        /* Button Styling */
+        #revealButton {
+            background-color: red;
+            color: white;
+            border: none;
+            font-size: 1.5rem;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            animation: pulse 2s infinite alternate;
+        }
+
+        #revealButton:hover {
+            background-color: darkred;
+        }
+
+        /* Flickering animation for suspense */
         @keyframes flicker {
             0% { opacity: 1; }
             50% { opacity: 0.6; }
             100% { opacity: 0.9; }
         }
 
-        /* Instructions to press Enter */
-        #prompt {
-            color: yellow;
-            font-size: 1.5rem;
-            margin-top: 30px;
-            animation: flicker 2s infinite alternate;
+        /* Button pulsing animation */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
         }
     </style>
 </head>
 <body>
-    <h1>Press "Enter" to reveal...</h1>
+    <h1>Click the button to reveal...</h1>
     <div id="output"></div> <!-- Container for stacked text lines -->
-    <p id="prompt">Press "Enter" to continue...</p>
+    <button id="revealButton">Reveal Next</button>
 
     <script>
         // Array of suspenseful lines to display
         const lines = ["Afton Alps", "January 4th", "9 AM"];
         let currentIndex = 0;
 
-        // Event listener for Enter key
-        document.addEventListener('keydown', function(event) {
-            if (event.key === "Enter") {
-                if (currentIndex < lines.length) {
-                    // Create a new paragraph for the next line of text
-                    let newLine = document.createElement('p');
-                    newLine.innerText = lines[currentIndex];
+        // Get the button element
+        const button = document.getElementById('revealButton');
 
-                    // Append it to the output container
-                    document.getElementById('output').appendChild(newLine);
+        // Button click event listener
+        button.addEventListener('click', function() {
+            if (currentIndex < lines.length) {
+                // Create a new paragraph for the next line of text
+                let newLine = document.createElement('p');
+                newLine.innerText = lines[currentIndex];
 
-                    // Fade-in effect
-                    setTimeout(() => {
-                        newLine.style.opacity = "1";
-                    }, 100);
+                // Append the new line to the output container
+                document.getElementById('output').appendChild(newLine);
 
-                    currentIndex++; // Move to the next line
-                }
+                // Fade-in effect
+                setTimeout(() => {
+                    newLine.style.opacity = "1";
+                }, 100);
 
-                // Update the prompt
-                let promptElement = document.getElementById('prompt');
-                if (currentIndex < lines.length) {
-                    promptElement.innerText = "Press 'Enter' to continue...";
-                } else {
-                    promptElement.innerText = "That's it... Press 'Enter' to restart.";
+                currentIndex++; // Move to the next line
+
+                // If all lines are displayed, change button text
+                if (currentIndex === lines.length) {
+                    button.innerText = "That's it...";
+                    button.disabled = true; // Disable the button
+                    button.style.backgroundColor = "gray";
+                    button.style.cursor = "not-allowed";
                 }
             }
         });
